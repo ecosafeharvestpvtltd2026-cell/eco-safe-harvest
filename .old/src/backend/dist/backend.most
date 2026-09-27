@@ -1,0 +1,142 @@
+// Version: 4.0.0
+type AccessControlState__201339279 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__230067015<Principal, UserRole__91647283>
+  };
+type Account__695028677 =
+  {
+    active : Bool;
+    createdAt : Int;
+    displayName : Text;
+    id : OfficerId__35307316;
+    password : Text;
+    role : Role__300349085;
+    username : Text
+  };
+type Account__964495633 =
+  {
+    active : Bool;
+    createdAt : Int;
+    displayName : Text;
+    id : Nat;
+    password : Text;
+    role : Role__339871095;
+    username : Text
+  };
+type Data__44217153<K, V> = {var count : Nat__227979830; kvs : [var ?(K, V)]};
+type DateText__762537557 = Text;
+type FarmerId__279822273 = Nat;
+type Farmer__206512563 =
+  {
+    address : Text;
+    code : Text;
+    createdAt : Int;
+    id : FarmerId__279822273;
+    name : Text;
+    notes : Text;
+    phone : Text;
+    village : Text
+  };
+type Farmer__733589169 =
+  {
+    address : Text;
+    code : Text;
+    createdAt : Int;
+    id : Nat;
+    name : Text;
+    notes : Text;
+    phone : Text;
+    village : Text
+  };
+type HarvestId__486064495 = Nat;
+type Harvest__806942419 =
+  {
+    createdAt : Int;
+    date : DateText__762537557;
+    farmerCode : Text;
+    farmerId : FarmerId__279822273;
+    farmerName : Text;
+    id : HarvestId__486064495;
+    kg : Kg__178426776;
+    officerId : OfficerId__35307316;
+    officerName : Text;
+    pricePerKg : Money__698460738;
+    product : Product__110260450;
+    total : Money__698460738
+  };
+type Harvest__887274803 =
+  {
+    createdAt : Int;
+    date : Text;
+    farmerCode : Text;
+    farmerId : Nat;
+    farmerName : Text;
+    id : Nat;
+    kg : Nat;
+    officerId : Nat;
+    officerName : Text;
+    pricePerKg : Nat;
+    product : Product__881835345;
+    total : Nat
+  };
+type Internal__283199666<K, V> =
+  {children : [var ?Node__204828119<K, V>]; data : Data__44217153<K, V>};
+type Kg__178426776 = Nat;
+type Leaf__598469445<K, V> = {data : Data__44217153<K, V>};
+type Map__230067015<K, V> = Map__405889023<K, V>;
+type Map__405889023<K, V> = Map__603270868<K, V>;
+type Map__603270868<K, V> =
+  {var root : Node__204828119<K, V>; var size : Nat__227979830};
+type Money__698460738 = Nat;
+type Nat__227979830 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__384065910 =
+  {
+    accessControlState : AccessControlState__201339279;
+    accounts : {var items : [Account__964495633]};
+    farmers : {var items : [Farmer__733589169]};
+    harvests : {var items : [Harvest__887274803]};
+    nextAccountId : {var value : Nat};
+    nextFarmerId : {var value : Nat};
+    nextHarvestId : {var value : Nat};
+    prices : {var items : [PriceEntry__933902857]};
+    sessions : {var byPrincipal : [(Principal, Nat)]}
+  };
+type Node__204828119<K, V> =
+  {#internal : Internal__283199666<K, V>; #leaf : Leaf__598469445<K, V>};
+type OfficerId__35307316 = Nat;
+type OldActor__594441985 = {};
+type PriceEntry__599388356 =
+  {
+    pricePerKg : Money__698460738;
+    product : Product__110260450;
+    updatedAt : Int
+  };
+type PriceEntry__933902857 =
+  {pricePerKg : Nat; product : Product__881835345; updatedAt : Int};
+type Product__110260450 =
+  {#banana; #guava; #mustard; #other; #passion; #pear; #woodApple};
+type Product__881835345 =
+  {#banana; #guava; #mustard; #other; #passion; #pear; #woodApple};
+type Role__300349085 = {#admin; #officer};
+type Role__339871095 = {#admin; #officer};
+type UserRole__91647283 = {#admin; #guest; #user};
+{
+  "20260925_120000" : OldActor__594441985 -> NewActor__384065910
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__230067015<Principal, UserRole__91647283>
+    };
+  stable accounts : {var items : [Account__695028677]};
+  stable farmers : {var items : [Farmer__206512563]};
+  stable harvests : {var items : [Harvest__806942419]};
+  stable nextAccountId : {var value : Nat};
+  stable nextFarmerId : {var value : Nat};
+  stable nextHarvestId : {var value : Nat};
+  stable prices : {var items : [PriceEntry__599388356]};
+  stable sessions : {var byPrincipal : [(Principal, Nat)]}
+};

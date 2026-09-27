@@ -1,0 +1,315 @@
+type Value = 
+ variant {
+   "bool": bool;
+   float: float64;
+   "int": int;
+   "nat": nat;
+   "null";
+   "text": text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type Session = 
+ record {
+   displayName: text;
+   id: OfficerId;
+   role: Role;
+   username: text;
+ };
+type Role = 
+ variant {
+   admin;
+   officer;
+ };
+type Result__1 = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Result = 
+ record {
+   hasMore: bool;
+   rows: vec vec Cell;
+ };
+type ReportRow = 
+ record {
+   count: nat;
+   key: text;
+   kg: Kg;
+   title: text;
+   value: Money;
+ };
+type ReportKind = 
+ variant {
+   byFarmer;
+   byOfficer;
+   byProduct;
+   daily;
+   monthly;
+   weekly;
+ };
+type ReportError = 
+ variant {
+   invalidRange;
+   notAuthorized;
+ };
+type Report = 
+ record {
+   from: DateText;
+   kind: ReportKind;
+   recordCount: nat;
+   rows: vec ReportRow;
+   to: DateText;
+   totalKg: Kg;
+   totalValue: Money;
+ };
+type Product = 
+ variant {
+   banana;
+   guava;
+   mustard;
+   other;
+   passion;
+   pear;
+   woodApple;
+ };
+type PriceError = variant {notAuthorized;};
+type PriceEntry = 
+ record {
+   pricePerKg: Money;
+   product: Product;
+   updatedAt: int;
+ };
+type OfficerId = nat;
+type Money = nat;
+type Kg = nat;
+type HarvestSummary = 
+ record {
+   date: DateText;
+   id: HarvestId;
+   kg: Kg;
+   officerId: OfficerId;
+   officerName: text;
+   pricePerKg: Money;
+   product: Product;
+   total: Money;
+ };
+type HarvestInput = 
+ record {
+   date: DateText;
+   farmerId: FarmerId;
+   kg: Kg;
+   pricePerKg: Money;
+   product: Product;
+ };
+type HarvestId = nat;
+type HarvestError = 
+ variant {
+   farmerNotFound: FarmerId;
+   notAuthorized;
+   notFound: HarvestId;
+ };
+type Harvest = 
+ record {
+   createdAt: int;
+   date: DateText;
+   farmerCode: text;
+   farmerId: FarmerId;
+   farmerName: text;
+   id: HarvestId;
+   kg: Kg;
+   officerId: OfficerId;
+   officerName: text;
+   pricePerKg: Money;
+   product: Product;
+   total: Money;
+ };
+type FarmerId = nat;
+type FarmerError = 
+ variant {
+   duplicateCode: text;
+   notAuthorized;
+   notFound: FarmerId;
+ };
+type FarmerDetail = 
+ record {
+   farmer: Farmer;
+   harvests: vec HarvestSummary;
+ };
+type Farmer = 
+ record {
+   address: text;
+   code: text;
+   createdAt: int;
+   id: FarmerId;
+   name: text;
+   notes: text;
+   phone: text;
+   village: text;
+ };
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type DateText = text;
+type DashboardStats = 
+ record {
+   date: DateText;
+   farmerCount: nat;
+   recordCount: nat;
+   totalKg: Kg;
+   totalValue: Money;
+ };
+type Dashboard = 
+ record {
+   recent: vec HarvestSummary;
+   stats: DashboardStats;
+ };
+type CredentialRow = 
+ record {
+   displayName: text;
+   password: text;
+   role: Role;
+   username: text;
+ };
+type Cell = 
+ record {
+   name: text;
+   value: Value;
+ };
+type AuthError = 
+ variant {
+   invalidCredentials;
+   lastAdmin;
+   notAuthorized;
+   notFound;
+   usernameTaken;
+ };
+service : {
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result__1);
+  _internet_identity_sign_in_start: () -> (blob);
+  /// Add a farmer (admin only).
+  addFarmer: (code: text, name: text, phone: text, village: text, address:
+   text, notes: text) -> (variant {
+                            err: FarmerError;
+                            ok: Farmer;
+                          });
+  /// Enter a harvest record. The price used is frozen into the record.
+  addHarvest: (input: HarvestInput) ->
+   (variant {
+      err: HarvestError;
+      ok: Harvest;
+    });
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  /// Create an officer account (admin only).
+  createOfficer: (username: text, password: text, displayName: text) ->
+   (variant {
+      err: AuthError;
+      ok: Session;
+    });
+  /// Delete a harvest record (admin only).
+  deleteHarvest: (id: HarvestId) -> (variant {
+                                       err: HarvestError;
+                                       ok;
+                                     });
+  execute: (qJson: text) -> (Result) query;
+  /// Static Markdown documentation of the backend's public API.
+  getApiDoc: () -> (text) query;
+  getCallerUserRole: () -> (UserRole) query;
+  /// Today's totals plus the latest harvest entries.
+  /// Officers are scoped to their own records; admin sees company-wide totals.
+  getDashboard: (today: DateText) -> (Dashboard) query;
+  /// Fetch one farmer with that farmer's harvest history.
+  getFarmer: (id: FarmerId) -> (opt FarmerDetail) query;
+  /// Harvest history for one farmer.
+  getFarmerHarvests: (farmerId: FarmerId) -> (vec HarvestSummary) query;
+  /// Fetch one harvest record.
+  getHarvest: (id: HarvestId) -> (opt Harvest) query;
+  /// Build a report of the requested kind over a date range.
+  /// Officers are scoped to their own records; admin sees all.
+  getReport: (kind: ReportKind, from: DateText, to: DateText) ->
+   (variant {
+      err: ReportError;
+      ok: Report;
+    }) query;
+  /// The seeded sign-in credentials (admin + six officers) shown on the
+  /// pre-login credentials panel. Intentionally public: it returns only the
+  /// accounts created by the migration seed (ids 0-6) and no other account data.
+  getSeededCredentials: () -> (vec CredentialRow) query;
+  /// The signed-in user's session, or `null` when not signed in.
+  getSession: () -> (opt Session) query;
+  isCallerAdmin: () -> (bool) query;
+  /// List every farmer.
+  listFarmers: () -> (vec Farmer) query;
+  /// List harvest records. Officers see only their own; admin sees all.
+  listHarvests: () -> (vec Harvest) query;
+  /// List all officer accounts (admin only).
+  listOfficers: () -> (vec Session) query;
+  /// The current price list for all seven products.
+  listPrices: () -> (vec PriceEntry) query;
+  /// Sign in with username, password and the selected role.
+  login: (username: text, password: text, role: Role) ->
+   (variant {
+      err: AuthError;
+      ok: Session;
+    });
+  /// Clear the current session.
+  logout: () -> ();
+  /// Reset an officer's password (admin only).
+  resetOfficerPassword: (id: OfficerId, password: text) ->
+   (variant {
+      err: AuthError;
+      ok;
+    });
+  schema: () -> (text) query;
+  /// Search farmers across code, name, phone and village.
+  searchFarmers: (term: text) -> (vec Farmer) query;
+  /// Update the current price per kg for one product (admin only).
+  setPrice: (product: Product, pricePerKg: Money) ->
+   (variant {
+      err: PriceError;
+      ok: PriceEntry;
+    });
+  /// Edit a farmer's details (admin only).
+  updateFarmer: (id: FarmerId, code: text, name: text, phone: text, village:
+   text, address: text, notes: text) ->
+   (variant {
+      err: FarmerError;
+      ok: Farmer;
+    });
+  /// Edit a harvest record (admin only).
+  updateHarvest: (id: HarvestId, input: HarvestInput) ->
+   (variant {
+      err: HarvestError;
+      ok: Harvest;
+    });
+  /// Update an officer's display name (admin only).
+  updateOfficer: (id: OfficerId, displayName: text) ->
+   (variant {
+      err: AuthError;
+      ok: Session;
+    });
+}

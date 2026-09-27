@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Eco Safe Harvest — "Harvest Ledger" visual system
+   Sinhala-first, mobile-first, high-contrast agricultural palette.
+   Latin/numeric UI uses Figtree + Space Grotesk (bundled).
+   Sinhala script resolves through the platform Sinhala stack (Noto Sans
+   Sinhala first, then Android/iOS/Windows Sinhala fallbacks) so no external
+   CDN font fetch is required for offline field use.
+--------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Figtree";
+  src: url("/assets/fonts/Figtree.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("/assets/fonts/SpaceGrotesk.woff2") format("woff2");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    /* Sinhala-capable stacks: Latin font first for numerals/labels, then the
+       platform Sinhala family so Sinhala glyphs always render. */
+    --font-display: "Space Grotesk", "Noto Sans Sinhala", "Iskoola Pota",
+      "Nirmala UI", "Noto Sans Sinhala UI", sans-serif;
+    --font-body: "Figtree", "Noto Sans Sinhala", "Iskoola Pota", "Nirmala UI",
+      "Noto Sans Sinhala UI", "Segoe UI", sans-serif;
+    --font-mono: "Geist Mono", "JetBrains Mono", "Noto Sans Sinhala", monospace;
+
+    --radius: 0.875rem;
+
+    /* Surfaces — warm off-white with a faint green tint */
+    --background: 0.985 0.008 150;
+    --foreground: 0.22 0.03 155;
+    --card: 1 0 0;
+    --card-foreground: 0.22 0.03 155;
+    --popover: 1 0 0;
+    --popover-foreground: 0.22 0.03 155;
+
+    /* Primary — deep leaf green */
+    --primary: 0.47 0.14 150;
+    --primary-foreground: 0.99 0.006 150;
+
+    /* Secondary — soft green wash */
+    --secondary: 0.94 0.025 150;
+    --secondary-foreground: 0.3 0.06 152;
+    --muted: 0.955 0.014 150;
+    --muted-foreground: 0.47 0.03 152;
+
+    /* Accent — harvest gold */
+    --accent: 0.78 0.15 85;
+    --accent-foreground: 0.24 0.05 80;
+
+    /* Semantic */
+    --destructive: 0.52 0.2 27;
+    --destructive-foreground: 0.99 0.006 27;
+    --success: 0.5 0.13 152;
+    --success-foreground: 0.99 0.006 152;
+    --warning: 0.72 0.16 78;
+    --warning-foreground: 0.24 0.05 78;
+
+    --border: 0.89 0.02 150;
+    --input: 0.87 0.025 150;
+    --ring: 0.47 0.14 150;
+
+    /* Charts — harvest palette */
+    --chart-1: 0.47 0.14 150;
+    --chart-2: 0.78 0.15 85;
+    --chart-3: 0.6 0.13 195;
+    --chart-4: 0.62 0.16 45;
+    --chart-5: 0.55 0.12 300;
+
+    --sidebar: 0.97 0.02 150;
+    --sidebar-foreground: 0.22 0.03 155;
+    --sidebar-primary: 0.47 0.14 150;
+    --sidebar-primary-foreground: 0.99 0.006 150;
+    --sidebar-accent: 0.94 0.025 150;
+    --sidebar-accent-foreground: 0.3 0.06 152;
+    --sidebar-border: 0.89 0.02 150;
+    --sidebar-ring: 0.47 0.14 150;
+
+    /* Extended tokens */
+    --gradient-primary: linear-gradient(
+      135deg,
+      oklch(0.47 0.14 150),
+      oklch(0.38 0.11 155)
+    );
+    --gradient-gold: linear-gradient(
+      135deg,
+      oklch(0.82 0.15 88),
+      oklch(0.72 0.15 78)
+    );
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --tap-min: 2.75rem;
+  }
+
+  .dark {
+    --background: 0.16 0.018 152;
+    --foreground: 0.95 0.012 150;
+    --card: 0.2 0.022 152;
+    --card-foreground: 0.95 0.012 150;
+    --popover: 0.22 0.024 152;
+    --popover-foreground: 0.95 0.012 150;
+
+    --primary: 0.7 0.15 150;
+    --primary-foreground: 0.16 0.018 152;
+
+    --secondary: 0.25 0.028 152;
+    --secondary-foreground: 0.88 0.012 150;
+    --muted: 0.25 0.028 152;
+    --muted-foreground: 0.62 0.02 150;
+
+    --accent: 0.8 0.15 85;
+    --accent-foreground: 0.18 0.03 80;
+
+    --destructive: 0.62 0.2 27;
+    --destructive-foreground: 0.16 0.018 27;
+    --success: 0.68 0.14 152;
+    --success-foreground: 0.16 0.018 152;
+    --warning: 0.78 0.15 80;
+    --warning-foreground: 0.18 0.03 80;
+
+    --border: 0.3 0.024 152;
+    --input: 0.3 0.024 152;
+    --ring: 0.7 0.15 150;
+
+    --chart-1: 0.7 0.15 150;
+    --chart-2: 0.8 0.15 85;
+    --chart-3: 0.68 0.13 195;
+    --chart-4: 0.7 0.16 45;
+    --chart-5: 0.66 0.13 300;
+
+    --sidebar: 0.2 0.022 152;
+    --sidebar-foreground: 0.95 0.012 150;
+    --sidebar-primary: 0.7 0.15 150;
+    --sidebar-primary-foreground: 0.16 0.018 152;
+    --sidebar-accent: 0.25 0.028 152;
+    --sidebar-accent-foreground: 0.88 0.012 150;
+    --sidebar-border: 0.3 0.024 152;
+    --sidebar-ring: 0.7 0.15 150;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-size: 17px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    line-height: 1.65;
+    letter-spacing: 0.005em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+
+  /* Large tap targets for field use on phones */
+  button,
+  [role="button"],
+  a,
+  input,
+  select,
+  textarea {
+    min-height: var(--tap-min);
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer utilities {
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .gradient-primary {
+    background-image: var(--gradient-primary);
+  }
+
+  .gradient-gold {
+    background-image: var(--gradient-gold);
+  }
+
+  .tap-target {
+    min-height: var(--tap-min);
+    min-width: var(--tap-min);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .shadow-harvest {
+    box-shadow: 0 1px 2px oklch(0.47 0.14 150 / 0.06), 0 6px 20px -6px
+      oklch(0.47 0.14 150 / 0.14);
+  }
+
+  .shadow-harvest-lg {
+    box-shadow: 0 2px 4px oklch(0.47 0.14 150 / 0.07), 0 14px 34px -10px
+      oklch(0.47 0.14 150 / 0.2);
+  }
+}

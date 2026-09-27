@@ -1,0 +1,20 @@
+{
+  "overview": "A Sinhala-language mobile web app for a fruit and vegetable collection company, with role-based Admin and Officer access, farmer management, harvest entry, price lists, and reports.",
+  "features": [
+    "Sign in as Admin or Officer with seeded credentials",
+    "View Admin and Officer login credentials on the sign-in screen",
+    "Manage farmers and record harvests with frozen prices",
+    "Maintain the product price list (Admin only)",
+    "Manage Officer accounts and reset passwords (Admin only)",
+    "View daily and grouped collection reports"
+  ],
+  "category": "business-operations",
+  "tags": [
+    "agriculture",
+    "sinhala",
+    "mobile",
+    "role-based-access",
+    "inventory"
+  ],
+  "last_updated": "2026-09-26T01:15:57.238Z"
+}
