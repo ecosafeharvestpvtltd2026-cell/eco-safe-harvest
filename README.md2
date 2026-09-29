@@ -1,1 +1,48 @@
 github/workflows/build-apk.yml
+name: Build Eco Safe Harvest APK
+
+on:
+workflow_dispatch:
+push:
+branches:
+- main
+
+jobs:
+build:
+runs-on: ubuntu-latest
+
+steps:
+  - name: Checkout
+    uses: actions/checkout@v4
+
+  - name: Setup Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: 20
+
+  - name: Enable pnpm
+    run: corepack enable
+
+  - name: Install dependencies
+    run: pnpm install --no-frozen-lockfile
+
+  - name: Build frontend
+    run: pnpm --dir src/frontend run build
+
+  - name: Package APK
+    run: |
+      mkdir -p apk
+      cd src/frontend
+      npx cap init "Eco Safe Harvest" "com.ecosafeharvest.app" --web-dir dist || true
+      npx cap add android
+      npx cap copy
+      cd android
+      chmod +x gradlew
+      ./gradlew assembleDebug
+      cp app/build/outputs/apk/debug/app-debug.apk ../../../apk/eco_safe_harvest.apk
+
+  - name: Upload APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: eco-safe-harvest-apk
+      path: apk/eco_safe_harvest.apk
